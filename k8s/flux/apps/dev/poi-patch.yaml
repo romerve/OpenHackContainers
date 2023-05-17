@@ -8,6 +8,20 @@ spec:
     metadata:
       labels:
         environemnt: dev
+    spec:
+      nodeSelector:
+          "kubernetes.io/os": linux
+      containers:
+      - image: nobeliumcr.azurecr.io/tripinsights/poi:0.1
+        imagePullPolicy: Always
+        name: poi-app
+      volumes:
+      - name: secrets-store
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "dev-keyvault-tripinsights"
 
 ---
 apiVersion: v1
