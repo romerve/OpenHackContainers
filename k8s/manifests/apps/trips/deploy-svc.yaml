@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trips-deploy
+  labels:
+    deploy: trips
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trips
+  template:
+    metadata:
+      labels:
+        app: trips
+    spec:
+      nodeSelector:
+            "kubernetes.io/os": linux
+      containers:
+      - image: nobeliumcr.azurecr.io/tripinsights/trips:0.1
+        imagePullPolicy: Always
+        name: trips-app
+        resources:
+          requests:
+            memory: 64Mi
+            cpu: 250m
+          limits:
+            memory: 128Mi
+            cpu: 500m
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 443
+          name: https
+          protocol: TCP
+        env:
+        - name: PORT
+          value: '80'
+        - name: OPENAPI_DOCS_URI
+          value: 'http://localhost'
+        - name: DEBUG_LOGGING
+          value: 'true'
+        volumeMounts:
+        - name: secrets-store
+          mountPath: "/secrets"
+          readOnly: true
+      volumes:
+      - name: secrets-store
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "keyvault-tripinsights"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trips-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: trips
+  ports:
+  - protocol: TCP
+    name: http
+    port: 80
+    targetPort: 80
+  - protocol: TCP
+    name: https
+    port: 443
+    targetPort: 443

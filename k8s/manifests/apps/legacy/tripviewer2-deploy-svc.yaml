@@ -1,0 +1,52 @@
+apiVersion: apps/v1  
+kind: Deployment  
+metadata:  
+  name: tripviewer2-deploy
+  labels:
+    app: tripviewer2
+spec:  
+  replicas: 1
+  template:
+    metadata:
+      name: tripviewer2
+      labels:
+        app: tripviewer2
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+      - name: tripviewer2-app
+        image: nobeliumcr.azurecr.io/tripinsights/tripviewer2:0.1
+        resources:
+          requests:
+            memory: 64Mi
+            cpu: 250m
+          limits:
+            memory: 128Mi
+            cpu: 500m
+        env:
+        - name: WCF_ENDPOINT
+          value: "http://wfcsvc-svc"
+        - name: USERPROFILE_API_ENDPOINT
+          value: "http://userprofile-svc"
+        - name: TRIPS_API_ENDPOINT
+          value: "http://trips-svc"
+        - name: BING_MAPS_KEY
+          value: "AltQh9hmgcytZU9vBQOw6GI7gohvGEqkuOS9mb17L0QNaIABOHFl0trYXUx6Jpgm"
+        ports:
+          - containerPort: 80
+  selector:
+    matchLabels:
+      app: tripviewer2
+---
+apiVersion: v1  
+kind: Service  
+metadata:  
+  name: tripviewer2-svc
+spec:  
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 80
+  selector:
+    app: tripviewer2

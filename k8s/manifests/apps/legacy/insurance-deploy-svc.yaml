@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: insurance-deploy
+  labels:
+    deploy: insurance
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: insurance
+  template:
+    metadata:
+      labels:
+        app: insurance
+    spec:
+      nodeSelector:
+          "kubernetes.io/os": linux
+      containers:
+      - image: nobeliumcr.azurecr.io/tripinsights/insurance:0.1
+        imagePullPolicy: Always
+        name: insurance-app
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "3.5Gi"
+        ports:
+        - containerPort: 8081
+          name: http
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insurance-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: insurance
+  ports:
+  - protocol: TCP
+    name: insurance-http
+    port: 80
+    targetPort: 8081

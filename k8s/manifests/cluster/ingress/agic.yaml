@@ -1,0 +1,102 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: agic-ingress
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+    appgw.ingress.kubernetes.io/backend-protocol: "http"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: tripviewer-svc
+            port:
+              number: 80
+      - path: /api/poi
+        pathType: Prefix
+        backend:
+          service:
+            name: poi-svc
+            port:
+              number: 80
+      - path: /api/docs/poi
+        pathType: Prefix
+        backend:
+          service:
+            name: poi-svc
+            port:
+              number: 80
+      - path: /api/trips
+        pathType: Prefix
+        backend:
+          service:
+            name: trips-svc
+            port:
+              number: 80
+      - path: /api/docs/trips
+        pathType: Prefix
+        backend:
+          service:
+            name: trips-svc
+            port:
+              number: 80
+      - path: /api/json
+        pathType: Prefix
+        backend:
+          service:
+            name: trips-svc
+            port:
+              number: 80
+      - path: /api/user-java
+        pathType: Prefix
+        backend:
+          service:
+            name: user-java-svc
+            port:
+              number: 80
+      - path: /api/docs/user-java
+        pathType: Prefix
+        backend:
+          service:
+            name: user-java-svc
+            port:
+              number: 80
+      - path: /api/documentation/user-java
+        pathType: Prefix
+        backend:
+          service:
+            name: user-java-svc
+            port:
+              number: 80
+      - path: /api/swagger-resources
+        pathType: Prefix
+        backend:
+          service:
+            name: user-java-svc
+            port:
+              number: 80
+      - path: /api/api-docs
+        pathType: Prefix
+        backend:
+          service:
+            name: user-java-svc
+            port:
+              number: 80
+      - path: /api/user
+        pathType: Prefix
+        backend:
+          service:
+            name: userprofile-svc
+            port:
+              number: 80
+      - path: /api/docs/user
+        pathType: Prefix
+        backend:
+          service:
+            name: userprofile-svc
+            port:
+              number: 80
