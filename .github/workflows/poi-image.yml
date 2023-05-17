@@ -17,9 +17,6 @@ jobs:
 
   build-push-poi:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: scr/poi
 
     steps:
     - uses: actions/checkout@v3
@@ -32,6 +29,7 @@ jobs:
         password: ${{ secrets.ACR_NOBELIUM_CLIENT_SECRET }}
           
     - name: Build the Docker image
+      working-directory: ./scr/poi
       run: |
         docker build . --file Dockerfile --tag ${{ env.REGISTRY }}/${{ env.IMGREPO }}/${{ env.IMGNAME }}:${{ github.run_number }}
         docker push ${{ env.REGISTRY }}/${{ env.IMGREPO }}/${{ env.IMGNAME }}:${{ github.run_number }}
