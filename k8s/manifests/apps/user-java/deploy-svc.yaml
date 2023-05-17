@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-java-deploy
+  labels:
+    deploy: user-java
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-java
+  template:
+    metadata:
+      labels:
+        app: user-java
+    spec:
+      nodeSelector:
+          "kubernetes.io/os": linux
+      containers:
+      - image: nobeliumcr.azurecr.io/tripinsights/user-java:0.1
+        imagePullPolicy: Always
+        name: user-java-app
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 500m
+          limits:
+            memory: 512Mi
+            cpu: 1000m
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 443
+          name: https
+          protocol: TCP
+        volumeMounts:
+        - name: secrets-store
+          mountPath: "/secrets"
+          readOnly: true
+      volumes:
+      - name: secrets-store
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "keyvault-tripinsights"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-java-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: user-java
+  ports:
+  - protocol: TCP
+    name: http
+    port: 80
+    targetPort: 80
+  - protocol: TCP
+    name: https
+    port: 443
+    targetPort: 443

@@ -1,0 +1,43 @@
+apiVersion: apps/v1  
+kind: Deployment  
+metadata:  
+  name: wcfsvc-deploy
+  labels:
+    app: wcfsvc
+spec:  
+  replicas: 1
+  template:
+    metadata:
+      name: wcfsvc
+      labels:
+        app: wcfsvc
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": windows
+      containers:
+      - name: wcf-app
+        image: nobeliumcr.azurecr.io/tripinsights/wcfservice:0.1
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 500m
+          limits:
+            memory: 256Mi
+            cpu: 1000m
+        ports:
+          - containerPort: 80
+  selector:
+    matchLabels:
+      app: wcfsvc
+---
+ apiVersion: v1
+ kind: Service
+ metadata:
+   name: wcfsvc-svc
+ spec:
+   type: ClusterIP
+   ports:
+   - protocol: TCP
+     port: 80
+   selector:
+     app: wcfsvc

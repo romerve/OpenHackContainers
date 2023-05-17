@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: poi-deploy
+  labels:
+    deploy: poi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: poi
+  template:
+    metadata:
+      labels:
+        app: poi
+    spec:
+      nodeSelector:
+          "kubernetes.io/os": linux
+      containers:
+      - image: nobeliumcr.azurecr.io/tripinsights/poi:0.1
+        imagePullPolicy: Always
+        name: poi-app
+        resources:
+          requests:
+            memory: 64Mi
+            cpu: 250m
+          limits:
+            memory: 128Mi
+            cpu: 500m
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 443
+          name: https
+          protocol: TCP
+        env:
+        - name: WEB_SERVER_BASE_URI
+          value: 'http://0.0.0.0'
+        - name: WEB_PORT
+          value: '80'
+        - name: ASPNETCORE_ENVIRONMENT
+          value: 'Production'
+        volumeMounts:
+        - name: secrets-store
+          mountPath: "/secrets"
+          readOnly: true
+      volumes:
+      - name: secrets-store
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "keyvault-tripinsights"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: poi-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: poi
+  ports:
+  - protocol: TCP
+    name: http
+    port: 80
+    targetPort: 80
+  - protocol: TCP
+    name: https
+    port: 443
+    targetPort: 443
