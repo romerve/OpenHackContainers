@@ -27,7 +27,7 @@ jobs:
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ secrets.ACR_NOBELIUM_CLIENT_ID }}
-        password: ${{ secrets.ACR_NOBELIUM_CLIENT_ID }}
+        password: ${{ secrets.ACR_NOBELIUM_CLIENT_SECRET }}
           
     - name: Build the Docker image
       run: |
