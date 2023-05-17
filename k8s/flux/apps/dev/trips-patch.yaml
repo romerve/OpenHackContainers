@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dev-trips-deploy
+  name: trips-deploy
 spec:
   replicas: 1
   template:
@@ -13,6 +13,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: dev-trips-svc
+  name: trips-svc
 spec:
   type: LoadBalancer
