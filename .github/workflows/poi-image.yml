@@ -15,9 +15,11 @@ env:
   
 jobs:
 
-  build:
-
+  build-push-poi:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: scr/poi
 
     steps:
     - uses: actions/checkout@v3
