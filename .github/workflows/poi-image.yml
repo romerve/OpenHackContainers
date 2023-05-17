@@ -29,7 +29,7 @@ jobs:
         password: ${{ secrets.ACR_NOBELIUM_CLIENT_SECRET }}
           
     - name: Build the Docker image
-      working-directory: ./scr/poi
+      working-directory: src/poi
       run: |
         docker build . --file Dockerfile --tag ${{ env.REGISTRY }}/${{ env.IMGREPO }}/${{ env.IMGNAME }}:${{ github.run_number }}
         docker push ${{ env.REGISTRY }}/${{ env.IMGREPO }}/${{ env.IMGNAME }}:${{ github.run_number }}
