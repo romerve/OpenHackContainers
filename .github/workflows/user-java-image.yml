@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
     paths:
       - 'src/user-java/**'
-      - '!src/user-java/tests/**'
+      - '!src/user-java/src/test/**'
   workflow_dispatch:
   
 env:
