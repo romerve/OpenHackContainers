@@ -1,0 +1,34 @@
+name: TripViewer Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'src/tripviewer/**'
+  workflow_dispatch:
+  
+env:
+  REGISTRY: 'nobeliumcr.azurecr.io'
+  IMGREPO: 'tripinsights'
+  IMGNAME: 'tripviewer'
+  
+jobs:
+
+  build-push-tripviewer:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Login to ACR
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ secrets.ACR_NOBELIUM_CLIENT_ID }}
+        password: ${{ secrets.ACR_NOBELIUM_CLIENT_SECRET }}
+          
+    - name: Build the Docker image
+      working-directory: src/tripviewer
+      run: |
+        docker build . --file Dockerfile --tag ${{ env.REGISTRY }}/${{ env.IMGREPO }}/${{ env.IMGNAME }}:${{ github.run_number }}
+        docker push ${{ env.REGISTRY }}/${{ env.IMGREPO }}/${{ env.IMGNAME }}:${{ github.run_number }}
