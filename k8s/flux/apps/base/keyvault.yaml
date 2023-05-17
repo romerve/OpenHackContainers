@@ -1,0 +1,29 @@
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: keyvault-tripinsights
+spec:
+  provider: azure
+  parameters:
+    keyvaultName: "kv-kslodevwzhkmtz6ai4sq"
+    useVMManagedIdentity: "true"
+    userAssignedIdentityID: "3c51db66-14f0-49ef-bffb-fba61a6a21d2"
+    objects:  |
+      array:
+        - |
+          objectName: tripinsights-sqlfqdn
+          objectAlias: SQL_SERVER
+          objectType: secret
+        - |
+          objectName: tripinsights-sqldb
+          objectAlias: SQL_DBNAME
+          objectType: secret
+        - |
+          objectName: tripinsights-sqluser
+          objectAlias: SQL_USER
+          objectType: secret
+        - |
+          objectName: tripinsights-sqlpass
+          objectAlias: SQL_PASSWORD
+          objectType: secret        
+    tenantId: "b5b0c328-98eb-49dd-bc6a-de6aa205e15f"

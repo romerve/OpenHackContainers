@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dev-trips-deploy
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        environemnt: dev
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dev-trips-svc
