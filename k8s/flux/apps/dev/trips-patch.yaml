@@ -12,7 +12,7 @@ spec:
       nodeSelector:
           "kubernetes.io/os": linux
       containers:
-      - image: nobeliumcr.azurecr.io/tripinsights/trips:0.1
+      - image: nobeliumcr.azurecr.io/tripinsights/trips:6
         imagePullPolicy: Always
         name: trips-app
       volumes:
