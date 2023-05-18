@@ -3,7 +3,7 @@
   "info": {
     "description": "API for the trips in the Trip Insights app. https://github.com/Azure-Samples/openhack-containers",
     "version": "0.1.0",
-    "title": "Trip Insights Trips API"
+    "title": "Trip Insights Trips API - new commit"
   },
   "basePath": "/api",
   "schemes": [
